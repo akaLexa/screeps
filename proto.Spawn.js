@@ -3,7 +3,7 @@ var actions = {
     upgrader: require('actionUpgrader'),
     builder: require('actionBuilder'),
     repair: require('actionRepaireler'),
-    TowerSupply: require('creepTowerSupply'),
+    TowerSupply: require('actionTowerSupply'),
     harvesterLD: require('actionHarvestLD')
 };
 
@@ -116,7 +116,7 @@ StructureSpawn.prototype.populationControl = function () {
                     Memory.resourceRooms[Memory.creeps[name].resourceRoomID] = 0;
                 }
 
-                console.log('[memory] -> remove ' + name + ' from ' + Memory.creeps[name].resourceRoomID + ' limit: ' + Memory.resourceRooms[Memory.creeps[name].resourceRoomID]);
+                console.log('[memory] -> remove dead ' + Memory.creeps[name].role + ' from ' + Memory.creeps[name].resourceRoomID + ' limit: ' + Memory.resourceRooms[Memory.creeps[name].resourceRoomID]);
             }
 
             delete Memory.creeps[name];

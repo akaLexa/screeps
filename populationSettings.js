@@ -30,13 +30,13 @@ StructureSpawn.prototype.population = {
     //майнер энергии в других комнатах
     'harvesterLD':{
         pref:'HLD',
-        limit:6,
+        limit:7,
         body:[WORK,MOVE,CARRY,MOVE]
     },
     //обслуживание башен, когда башня полная, исполняет роль harvester'a
     'TowerSupply':{
         pref:'TS',
-        limit:1,
+        limit:2,
         body:[MOVE,CARRY,WORK,WORK]
     }
 };

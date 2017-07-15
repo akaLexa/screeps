@@ -36,7 +36,6 @@ module.exports = {
 
                 creep.memory.working = creep.mineEnergy();
             }
-
         }
         else{
             if(!creep.doRepair()){
@@ -51,8 +50,6 @@ module.exports = {
                 else{
                     creep.memory.working = true;
                 }
-
-
             }
             else{
                 creep.memory.working = true;
