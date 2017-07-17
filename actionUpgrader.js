@@ -2,6 +2,8 @@ var harvester = require('actionHarvest');
 
 module.exports = {
     run:function(creep){
+        let startCpu = Game.cpu.getUsed();
+        let elapsed;
 
         if(creep.room.name !== creep.memory.roomID){
             let actRes = creep.moveTo(new RoomPosition(25,25,creep.memory.roomID));

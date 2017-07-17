@@ -4,7 +4,8 @@ var actions = {
     builder: require('actionBuilder'),
     repair: require('actionRepaireler'),
     TowerSupply: require('actionTowerSupply'),
-    harvesterLD: require('actionHarvestLD')
+    harvesterLD: require('actionHarvestLD'),
+    lorry: require('actionLorry')
 };
 
 /**
@@ -115,8 +116,9 @@ StructureSpawn.prototype.populationControl = function () {
                 if(Memory.resourceRooms[Memory.creeps[name].resourceRoomID] < 0){
                     Memory.resourceRooms[Memory.creeps[name].resourceRoomID] = 0;
                 }
-
-                console.log('[memory] -> remove dead ' + Memory.creeps[name].role + ' from ' + Memory.creeps[name].resourceRoomID + ' limit: ' + Memory.resourceRooms[Memory.creeps[name].resourceRoomID]);
+                if( Memory.noticeSettings !== undefined && Memory.noticeSettings['memoryNotice'] === true) {
+                    console.log('[memory] -> remove dead ' + Memory.creeps[name].role + ' from ' + Memory.creeps[name].resourceRoomID + ' limit: ' + Memory.resourceRooms[Memory.creeps[name].resourceRoomID]);
+                }
             }
 
             delete Memory.creeps[name];
@@ -196,7 +198,9 @@ StructureSpawn.prototype.creepCreate = function (role) {
             let cName = this.createCreep(creepBody,this.population[role]['pref'] + '_'+pref.getTime(),{'role':role});
 
             if(cName !== undefined && _.isString(cName)){
-                console.log('[create]-> new creep: '+ role);
+                if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['createNotice'] === true){
+                    console.log('[create]-> new creep: '+ role);
+                }
                 //Game.creeps[cName].memory.spawnID = this.name;
                 Game.creeps[cName].memory.roomID = Game.creeps[cName].room.name;
                 Memory.population[this.name][role] += 1;

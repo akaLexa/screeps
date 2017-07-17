@@ -1,36 +1,3 @@
-/**
-var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-    console.log('Harvesters: ' + harvesters.length);
-
-    if(harvesters.length < 2) {
-        var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,MOVE], undefined, {role: 'harvester'});
-        console.log('Spawning new harvester: ' + newName);
-    }
-    
-    if(Game.spawns['Spawn1'].spawning) { 
-        var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
-        Game.spawns['Spawn1'].room.visual.text(
-            '🛠️' + spawningCreep.memory.role,
-            Game.spawns['Spawn1'].pos.x + 1, 
-            Game.spawns['Spawn1'].pos.y, 
-            {align: 'left', opacity: 0.8});
-    }
-    
-     var tower = Game.getObjectById('2b1ccec7009a39716be7ad3d');
-    if(tower) {
-        var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-            filter: (structure) => structure.hits < structure.hitsMax
-        });
-        if(closestDamagedStructure) {
-            tower.repair(closestDamagedStructure);
-        }
-
-        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(closestHostile) {
-            tower.attack(closestHostile);
-        }
-    }
-*/
 module.exports = {
     /**
      * мачете собирать!
@@ -38,9 +5,19 @@ module.exports = {
      */
     run:function(creep){
 
+        let startCpu = Game.cpu.getUsed();
+        let elapsed;
+
         if(creep.carry.energy === 0 || !creep.memory.working){
             creep.memory.action = 'mine Energy';
             creep.memory.working = creep.mineEnergy();
+            if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['noticeCPU'] === true && Memory.noticeSettings['noticeCPULevel']) {
+                elapsed = Game.cpu.getUsed() - startCpu;
+                if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                    creep.say(Math.round(elapsed,2)+'%');
+                   // console.log('[CPU]-> creep.harvest action: mine energy, cpu usage:' + elapsed);
+                }
+            }
         }
 
         if(creep.memory.working){
@@ -109,6 +86,13 @@ module.exports = {
             }
             else{
                 console.log('[notice] -> '+creep.id+' not found empty container for energy');
+            }
+            if( Memory.noticeSettings  !== undefined &&  Memory.noticeSettings['noticeCPU']=== true && Memory.noticeSettings['noticeCPULevel']) {
+                elapsed = Game.cpu.getUsed() - startCpu;
+                if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                    creep.say(Math.round(elapsed,2)+'%');
+                   // console.log('[CPU]-> creep.harvest action: transfer energy, cpu usage:' + elapsed);
+                }
             }
         }
     }

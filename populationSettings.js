@@ -9,16 +9,22 @@ StructureSpawn.prototype.population = {
         limit:3,
         body:[WORK,MOVE,CARRY,MOVE]
     },
+    // перетаскиватель ресурсов
+    'lorry':{
+        pref:'L',
+        limit:2,
+        body:[WORK,CARRY,CARRY,CARRY,MOVE]
+    },
     //абгрейд контроллера
     'upgrader':{
         pref:'Up',
-        limit:2,
+        limit:4,
         body:[MOVE,MOVE,CARRY,WORK]
     },
     // строитель
     'builder':{
         pref:'B',
-        limit:1,
+        limit:2,
         body:[MOVE,CARRY,WORK,WORK]
     },
     // ремонтник, способен замещать строителя, если нет объектов для ремонта

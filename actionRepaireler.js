@@ -1,11 +1,19 @@
 
 module.exports = {
     run:function(creep){
+        let startCpu = Game.cpu.getUsed();
+        let elapsed;
 
         if(creep.room.name !== creep.memory.roomID){
             let actRes = creep.moveTo(new RoomPosition(25,25,creep.memory.roomID));
             if (actRes === OK) {
                 creep.memory.action= 'traveling back ';
+            }
+            if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['noticeCPU'] === true && Memory.noticeSettings['noticeCPULevel']) {
+                elapsed = Game.cpu.getUsed() - startCpu;
+                if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                    creep.say(Math.round(elapsed,2)+'%');
+                }
             }
             return;
         }
@@ -42,16 +50,40 @@ module.exports = {
                 if(!creep.doBuild()){
                     if(!creep.doWallsRampartsRepair()){
                         creep.memory.working = creep.doUpgrade();
+                        if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['noticeCPU'] === true && Memory.noticeSettings['noticeCPULevel']) {
+                            elapsed = Game.cpu.getUsed() - startCpu;
+                            if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                                creep.say(Math.round(elapsed,2)+'%');
+                            }
+                        }
                     }
                     else{
                         creep.memory.working = true;
+                        if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['noticeCPU'] === true && Memory.noticeSettings['noticeCPULevel']) {
+                            elapsed = Game.cpu.getUsed() - startCpu;
+                            if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                                creep.say(Math.round(elapsed,2)+'%');
+                            }
+                        }
                     }
                 }
                 else{
                     creep.memory.working = true;
+                    if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['noticeCPU'] === true && Memory.noticeSettings['noticeCPULevel']) {
+                        elapsed = Game.cpu.getUsed() - startCpu;
+                        if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                            creep.say(Math.round(elapsed,2)+'%');
+                        }
+                    }
                 }
             }
             else{
+                if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['noticeCPU'] === true && Memory.noticeSettings['noticeCPULevel']) {
+                    elapsed = Game.cpu.getUsed() - startCpu;
+                    if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                        creep.say(Math.round(elapsed,2)+'%');
+                    }
+                }
                 creep.memory.working = true;
             }
         }

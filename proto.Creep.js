@@ -8,7 +8,6 @@ Creep.prototype.mineEnergy = function () {
 
         if(this.memory.resID){
             source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE,{filter: s => s.id === this.memory.resID});
-            //console.log(source,this.memory.resID,Game.getObjectById(this.memory.resID));
         }
 
         if(!source){

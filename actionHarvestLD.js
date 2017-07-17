@@ -6,6 +6,9 @@ module.exports = {
      */
     run:function(creep){
 
+        let startCpu = Game.cpu.getUsed();
+        let elapsed;
+
         if(creep.resourseRooms.length === 0){
             console.log('[notice]-> no resource rooms, change action to simple harvester');
             harvester.run(creep);
@@ -25,7 +28,9 @@ module.exports = {
                     if (Memory.resourceRooms[id] < creep.resourseRooms[id]['limit']) {
                         creep.memory.resourceRoomID = id;
                         Memory.resourceRooms[id] += 1;
-                        console.log('[longHarvest]-> Add ' + creep.memory.role + ' to room [' + creep.resourseRooms[id]['room'] + '], limit: ' + Memory.resourceRooms[id] + '/' + creep.resourseRooms[id]['limit']);
+                        if( Memory.noticeSettings &&  Memory.noticeSettings['longHarvestNotice'] === true){
+                            console.log('[longHarvest]-> Add ' + creep.memory.role + ' to room queue [' + creep.resourseRooms[id]['room'] + '], limit: ' + Memory.resourceRooms[id] + '/' + creep.resourseRooms[id]['limit']);
+                        }
                         break;
                     }
                 }
@@ -44,11 +49,26 @@ module.exports = {
                         creep.memory.action= 'traveling to ' + creep.resourseRooms[creep.memory.resourceRoomID]['room'];
                         return;
                     }
+                    if( Memory.noticeSettings &&  Memory.noticeSettings['noticeCPU'] && Memory.noticeSettings['noticeCPULevel']) {
+                        elapsed = Game.cpu.getUsed() - startCpu;
+                        if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                            creep.say(Math.round(elapsed,2)+'%');
+                            //console.log('[CPU]-> creep.harvestLD action: going another room, cpu usage:' + elapsed);
+                        }
+                    }
                 }
                 else{
                     //пока не набился битком, майнит энергию в комнате назначения
                     creep.memory.working = creep.mineEnergy();
+                    if( Memory.noticeSettings &&  Memory.noticeSettings['noticeCPU'] && Memory.noticeSettings['noticeCPULevel']) {
+                        elapsed = Game.cpu.getUsed() - startCpu;
+                        if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                            creep.say(Math.round(elapsed,2)+'%');
+                            //console.log('[CPU]-> creep.harvestLD action: mine energy in another room, cpu usage:' + elapsed);
+                        }
+                    }
                 }
+
             }
 
             if(creep.memory.working){
@@ -64,6 +84,13 @@ module.exports = {
 
                 creep.memory.action = 'transfer Energy';
 
+                if( Memory.noticeSettings &&  Memory.noticeSettings['noticeCPU'] && Memory.noticeSettings['noticeCPULevel']) {
+                    elapsed = Game.cpu.getUsed() - startCpu;
+                    if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                        creep.say(Math.round(elapsed,2)+'%');
+                        //console.log('[CPU]-> creep.harvestLD action: returning to room, cpu usage:' + elapsed);
+                    }
+                }
                 let structure;
                 //все экстеншены ДОЛЖНЫ быть заполнены!
                 /*structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -91,6 +118,14 @@ module.exports = {
                 }
                 else{
                     console.log('[harvest]-> '+creep.id+' not found empty container for energy');
+                }
+
+                if( Memory.noticeSettings &&  Memory.noticeSettings['noticeCPU'] && Memory.noticeSettings['noticeCPULevel']) {
+                    elapsed = Game.cpu.getUsed() - startCpu;
+                    if (elapsed > Memory.noticeSettings['noticeCPULevel']) {
+                        creep.say(Math.round(elapsed,2)+'%');
+                        //console.log('[CPU]-> creep.harvestLD action: transfer energy, cpu usage:' + elapsed);
+                    }
                 }
             }
         }
