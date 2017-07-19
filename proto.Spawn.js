@@ -3,6 +3,7 @@ var actions = {
     upgrader: require('actionUpgrader'),
     builder: require('actionBuilder'),
     repair: require('actionRepaireler'),
+    repairWall: require('actionWallRepair'),
     TowerSupply: require('actionTowerSupply'),
     harvesterLD: require('actionHarvestLD'),
     lorry: require('actionLorry')
@@ -22,6 +23,22 @@ StructureSpawn.prototype.DellCreeps = function (role) {
         }
     }
     console.log('[notice] -> deleting '+ nums +' creep(s)');
+    return '';
+};
+
+/**
+ * добавить лимит
+ * @param role string
+ * @param newLimit int
+ */
+StructureSpawn.prototype.addLimit = function (role,newLimit) {
+    if(this.population[role] !== undefined){
+        this.population[role]['limit'] = newLimit;
+        this.GetPopulation();
+    }
+    else{
+        console.log('[notice]-> unknown role '+role);
+    }
     return '';
 };
 
@@ -87,18 +104,23 @@ StructureSpawn.prototype.cleanMemoryPopulation = function () {
  */
 StructureSpawn.prototype.populationControl = function () {
 
-    //region если совсем нет ничего
+    //region контроль популяции
 
     if(Memory.population === undefined){
         Memory.population = {};
     }
 
-    if(Memory.population[this.name] === undefined){
+
+    if (Memory.population[this.name] === undefined) {
         Memory.population[this.name] = {};
-        for(let role in this.population){
+    }
+
+    for (let role in this.population) {
+        if (Memory.population[this.name][role] === undefined) {
             Memory.population[this.name][role] = 0;
         }
     }
+
     //endregion
 
     for (let name in Memory.creeps) {
@@ -195,7 +217,7 @@ StructureSpawn.prototype.creepCreate = function (role) {
         let tmp = this.canCreateCreep(creepBody, this.population[role]['pref'] + '_'+ pref.getTime());
 
         if( tmp === OK){
-            let cName = this.createCreep(creepBody,this.population[role]['pref'] + '_'+pref.getTime(),{'role':role});
+            let cName = this.createCreep(creepBody,this.population[role]['pref'] + '_'+pref.getTime(),{'role':role,'spawn':this.name});
 
             if(cName !== undefined && _.isString(cName)){
                 if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['createNotice'] === true){

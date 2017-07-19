@@ -54,7 +54,6 @@ module.exports.loop = function () {
         Game.spawns[spawn].populationControl();
     }
 
-
     //region lnks
     if (Memory.linkSettings !== undefined ) {
         for (let room in Memory.linkSettings) {
@@ -68,9 +67,9 @@ module.exports.loop = function () {
                     }
                     else {
                         targetFrom = Game.rooms[room].lookAt(Memory.linkSettings[room][id]['from'][0], Memory.linkSettings[room][id]['from'][1])[0]['structure'];
-                        if (targetFrom) {
+                        if (targetFrom && targetFrom instanceof StructureLink) {
                             targetTo = Game.rooms[room].lookAt(Memory.linkSettings[room][id]['to'][0], Memory.linkSettings[room][id]['to'][1])[0]['structure'];
-                            if (targetTo) {
+                            if (targetTo && targetTo instanceof StructureLink) {
                                 Memory.linkSettings[room][id]['fromID'] = targetFrom.id;
                                 Memory.linkSettings[room][id]['toID'] = targetTo.id;
                             }
@@ -83,4 +82,3 @@ module.exports.loop = function () {
     }
     //endregion
 };
-//todo: добавить роль lorry для заполнение extensions и учесть данную роль при харвестинге

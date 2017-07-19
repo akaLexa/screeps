@@ -37,16 +37,30 @@ StructureTower.prototype.defend = function () {
 StructureTower.prototype.doRepair = function () {
     let startCpu = Game.cpu.getUsed();
     let elapsed;
+    let closestDamagedStructure;
+    if(Memory.repair === undefined){
+        Memory.repair = {};
+    }
 
-    let closestDamagedStructure = this.pos.findClosestByRange(FIND_STRUCTURES, {
-        filter: (structure) =>
-        structure.structureType !== STRUCTURE_WALL
-        && structure.structureType !== STRUCTURE_RAMPART
-        && structure.structureType !== STRUCTURE_ROAD
-        && structure.hits < (structure.hitsMax / 2)
-    });
+    if(Memory.repair !== undefined && Memory.repair[this.room.name]!== undefined){
+        closestDamagedStructure = Game.getObjectById(Memory.repair[this.room.name]);
+        if(closestDamagedStructure.hits > (closestDamagedStructure.hitsMax / 2)){
+            closestDamagedStructure = undefined;
+            delete Memory.repair[this.room.name];
+        }
+    }
+    if(!closestDamagedStructure){
+        closestDamagedStructure = this.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: (structure) =>
+            structure.structureType !== STRUCTURE_WALL
+            && structure.structureType !== STRUCTURE_RAMPART
+            && structure.structureType !== STRUCTURE_ROAD
+            && structure.hits < (structure.hitsMax / 2)
+        });
+    }
 
     if (closestDamagedStructure) {
+        Memory.repair[this.room.name] = closestDamagedStructure.id;
         this.repair(closestDamagedStructure);
         elapsed = Game.cpu.getUsed() - startCpu;
         if( Memory.noticeSettings &&  Memory.noticeSettings['noticeCPU'] && Memory.noticeSettings['noticeCPULevel']) {

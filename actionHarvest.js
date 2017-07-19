@@ -24,10 +24,14 @@ module.exports = {
             creep.memory.action = 'transfer Energy';
             let structure;
 
-            //все экстеншены ДОЛЖНЫ быть заполнены!
-            structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (s) =>  s.structureType === STRUCTURE_EXTENSION && s.energy < s.energyCapacity
-            });
+            /*if(Memory.population[creep.memory.spawn]['lorry'] === undefined || Memory.population[creep.memory.spawn]['lorry'] === 0 ){
+                //все экстеншены ДОЛЖНЫ быть заполнены!
+                structure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                    filter: (s) =>  s.structureType === STRUCTURE_EXTENSION && s.energy < s.energyCapacity
+                });
+            }*/
+
+
 
             // ищем ближийший накопитель
             if(!structure){

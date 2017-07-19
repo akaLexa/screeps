@@ -46,8 +46,8 @@ module.exports = {
             }
         }
         else{
-            if(!creep.doRepair()){
-                if(!creep.doWallsRampartsRepair()){
+            if(!creep.doWallsRampartsRepair()){
+                if(!creep.doRepair()){
                     if(!creep.doBuild()){
                         creep.memory.working = creep.doUpgrade();
                         if( Memory.noticeSettings !== undefined &&  Memory.noticeSettings['noticeCPU'] === true && Memory.noticeSettings['noticeCPULevel']) {

@@ -112,11 +112,9 @@ Creep.prototype.doWallsRampartsRepair = function(){
     }
     else{
         targets = this.room.find(FIND_STRUCTURES, {
-            filter: object =>
-            object.structureType === STRUCTURE_WALL
-            || object.structureType === STRUCTURE_RAMPART
-            && object.hits < (object.hitsMax/2)
+            filter: object => (object.structureType === STRUCTURE_RAMPART || object.structureType === STRUCTURE_WALL) && object.hits < (object.hitsMax/2)
         });
+
         targets.sort((a,b) => a.hits - b.hits);
     }
 

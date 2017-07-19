@@ -22,7 +22,7 @@ module.exports = {
         if(carry < creep.carryCapacity && (creep.memory.working === false || creep.memory.working === undefined)){
 
             let container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: s => (s.structureType === STRUCTURE_CONTAINER || s.structureType === STRUCTURE_STORAGE ) &&  s.store[RESOURCE_ENERGY] > 0
+                filter: s => ((s.structureType === STRUCTURE_CONTAINER || s.structureType === STRUCTURE_STORAGE ) &&  s.store[RESOURCE_ENERGY] > 0) || (s.structureType === STRUCTURE_LINK && s.energy > 0)
             });
 
             if (container !== undefined) {
